@@ -186,15 +186,15 @@ def profile():
 @app.route("/populatedb", methods=['GET', 'POST'])
 def populatedb():
     # Place holder to create users and items
-    db.session.add(Catalog(name='Laptop', maker='Lenovo', model='Yoga'))
-    db.session.add(Catalog(name='Laptop', maker='Dell', model='XPZ'))
-    db.session.add(Catalog(name='Printer', maker='Brother', model='PX100'))
-    db.session.add(Catalog(name='Keyboard', maker='Anker', model='QZ12'))
-    db.session.add(Catalog(name='Paper', maker='Forest', model='A4'))
-    db.session.add(Users(name='Admin', email='admin@xyz.com', password='admin', phone='8888', role='admin'))
-    db.session.add(Users(name='Chetan', email='chetan@xyz.com', password='qwerty', phone='8888', role='admin'))
-    db.session.add(Users(name='Arun', email='arun@xyz.com', password='qwerty', phone='8888', role='admin'))
-    db.session.commit()
+    # db.session.add(Catalog(name='Laptop', maker='Lenovo', model='Yoga'))
+    # db.session.add(Catalog(name='Laptop', maker='Dell', model='XPZ'))
+    # db.session.add(Catalog(name='Printer', maker='Brother', model='PX100'))
+    # db.session.add(Catalog(name='Keyboard', maker='Anker', model='QZ12'))
+    # db.session.add(Catalog(name='Paper', maker='Forest', model='A4'))
+    # db.session.add(Users(name='Admin', email='admin@xyz.com', password='admin', phone='8888', role='admin'))
+    # db.session.add(Users(name='Chetan', email='chetan@xyz.com', password='qwerty', phone='8888', role='admin'))
+    # db.session.add(Users(name='Arun', email='arun@xyz.com', password='qwerty', phone='8888', role='admin'))
+    # db.session.commit()
     return redirect(url_for("login"))
 
 
