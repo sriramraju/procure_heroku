@@ -12,8 +12,8 @@ import numpy as np
 app = Flask(__name__)
 
 # Connect to DB
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:only4db@localhost/dbrev3'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://xhsbtdcghulzrv:0187061072f3bb6312b8ccb687b09a9ec26cb3253558cc4642acd8e9ede51104@ec2-35-170-146-54.compute-1.amazonaws.com:5432/deiqc36om0cmad'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:only4db@localhost/dbrev3'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://xhsbtdcghulzrv:0187061072f3bb6312b8ccb687b09a9ec26cb3253558cc4642acd8e9ede51104@ec2-35-170-146-54.compute-1.amazonaws.com:5432/deiqc36om0cmad'
 
 # Initialize database class from models.py
 db.init_app(app)
@@ -182,7 +182,8 @@ def login():
 def profile():
     return render_template('profile.html', user=current_user)
 
-@app.route("/populatedb", methods=['GET, POST'])
+
+@app.route("/populatedb", methods=['GET', 'POST'])
 def populatedb():
     # Place holder to create users and items
     db.session.add(Catalog(name='Laptop', maker='Lenovo', model='Yoga'))
