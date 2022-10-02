@@ -194,7 +194,7 @@ def populatedb():
     # db.session.add(Users(name='Admin', email='admin@xyz.com', password='admin', phone='8888', role='admin'))
     # db.session.add(Users(name='Chetan', email='chetan@xyz.com', password='qwerty', phone='8888', role='admin'))
     # db.session.add(Users(name='Arun', email='arun@xyz.com', password='qwerty', phone='8888', role='admin'))
-    # db.session.commit()
+    db.session.commit()
     return redirect(url_for("login"))
 
 
