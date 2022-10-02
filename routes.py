@@ -186,7 +186,7 @@ def profile():
 @app.route("/populatedb", methods=['GET', 'POST'])
 def populatedb():
     # Place holder to create users and items
-    # db.session.add(Catalog(name='Laptop', maker='Lenovo', model='Yoga'))
+    db.session.add(Catalog(name='Laptop', maker='Lenovo', model='Yoga'))
     # db.session.add(Catalog(name='Laptop', maker='Dell', model='XPZ'))
     # db.session.add(Catalog(name='Printer', maker='Brother', model='PX100'))
     # db.session.add(Catalog(name='Keyboard', maker='Anker', model='QZ12'))
