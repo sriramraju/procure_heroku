@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 # Connect to DB
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:only4db@localhost/dbrev3'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://xhsbtdcghulzrv:0187061072f3bb6312b8ccb687b09a9ec26cb3253558cc4642acd8e9ede51104@ec2-35-170-146-54.compute-1.amazonaws.com:5432/deiqc36om0cmad'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://juumzcvnfdkgkk:2136148600eec0736a41b463c6c6e7ea5fa257a051ff88dab2aec342045d5513@ec2-18-209-78-11.compute-1.amazonaws.com:5432/d76fmin6q31gkq'
 
 # Initialize database class from models.py
 db.init_app(app)
