@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Welcome {{user.name}}</h2>
+{% if user.role == 'poc' or user.role == 'admin' %}
+<div class="btn-group" role="group" aria-label="Basic example">
+  <a type="button" class="btn btn-secondary" href="{{ url_for('poc') }}">POC</a>
+</div>
+{% endif %}
+{% if user.role == 'approver' or user.role == 'admin' %}
+<div class="btn-group" role="group" aria-label="Basic example">
+  <a type="button" class="btn btn-secondary" href="{{ url_for('approver') }}">Approver</a>
+</div>
+{% endif %}
+{% if user.role == 'procurer' or user.role == 'admin' %}
+<div class="btn-group" role="group" aria-label="Basic example">
+  <a type="button" class="btn btn-secondary" href="{{ url_for('procurer') }}">Procurer</a>
+</div>
+{% endif %}
+{% if user.role == 'vendor' or user.role == 'admin' %}
+<div class="btn-group" role="group" aria-label="Basic example">
+  <a type="button" class="btn btn-secondary" href="{{ url_for('vendor') }}">Vendor</a>
+</div>
+{% endif %}
+
+
+
+{% endblock %}

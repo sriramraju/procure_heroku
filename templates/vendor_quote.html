@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <form method="POST" action="/submit-vendor-quote">
+    <input type="hidden" value="{{order.id}}" name="order_id">
+    {{ form.hidden_tag() }}
+
+
+     {% if itemDict %}
+        {% if order.vendor_id %}
+            {% if order.vendor_id == current_user_id %}
+                <h2> Status = Accepted </h2>
+                    <table>
+                        <td>
+                            <h3>Select: </h3>
+                        </td>
+                        <td>
+                            <select id="dropbtn" name="vendor_order_status">
+                                <option value="1">Procuring Items</option>
+                                <option value="2">Shipped Items</option>
+                                <option value="3">Delivered Items</option>
+                            </select>
+                        </td>
+                    </table>
+            {% else %}
+                <h2> Status = Rejected </h2>
+            {% endif %}
+        {% else %}
+            <h2> Status = Submitted </h2>
+        {% endif %}
+     {% endif %}
+
+
+    <div class="form-group">
+        <hr>
+        {{ form.available_date.label }}
+        {% if form.available_date.errors %}
+            {% for error in form.available_date.errors %}
+                <p class="error-message">{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        {{ form.available_date }}
+    </div>
+        <table style="width:50%" class="center">
+			<tr>
+				<th>Item Info</th>
+				<th>Quantity</th>
+                <th>Cost per unit</th>
+                <th>Sub-total</th>
+			</tr>
+
+			{% for cartItem in cart %}
+			<tr>
+				<td style="text-align:center">
+                    <input type="hidden" value="{{cartItem.item_id}}" name="item_id">
+                    {{dictCatalog.get(cartItem.item_id)}}
+                 </td>
+                <td style="text-align:center">
+                    <input type="hidden" value="{{cartItem.quantity}}" name="item_quantity">
+                    {{cartItem.quantity}}
+                </td>
+                {% if itemDict %}
+                    <td style="text-align:center">{{itemDict.get(cartItem.item_id)}}</td>
+                    <td style="text-align:center">{{cartItem.quantity*itemDict.get(cartItem.item_id)}}</td>
+                {% else %}
+                    <td><input type="number" id="cpu_{{loop.index}}" onkeyup="calculateSubtotal({{loop.index}},{{cartItem.quantity}},{{cart|length}})" name="costPerUnitList"></td>
+                    <td><span id="subtotal_{{loop.index}}"></span></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+        {% if itemDict %}
+            <h3>Total: {{form.total}}</h3>
+            <a type="button" class="btn btn-primary" href="{{ url_for('vendor') }}">Back</a>
+        {% else %}
+            <h3>Total: <span name="total" id="total"></span></h3>
+            {{form.submit}}
+        {% endif %}
+
+    </form>
+
+
+   <script>
+       function calculateSubtotal(id, qty, total_cnt) {
+          var getId = "cpu_" + id
+          var postId = "subtotal_" + id
+          var x = document.getElementById(getId).value;
+          document.getElementById(postId).innerHTML = x*qty;
+          doTotal(total_cnt)
+        }
+
+        function doTotal(val) {
+          var total = 0
+          for (i=1; i<=val; i++) {
+          total += Number(document.getElementById("subtotal_" + i).innerHTML)
+          }
+          document.getElementById("total").innerHTML = total
+        }
+   </script>
+
+{% endblock %}

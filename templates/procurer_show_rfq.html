@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Select Order</h1>
+        <div>
+
+            <! Comparison Table goes here  >
+
+            <table style="width:40%; float:left" border="2" bordercolor="black">
+                <tr>
+                     <label for="compare_oid">Choose an order:</label>
+                        <select name="compare_oid" id="compare_oid" onchange="tableCreate()">
+                            <option value=0>None</option>
+                            {% for oid in uniq_oids %}
+                                <option value={{(oid)}}>{{oid}}</option>
+                            {% endfor %}
+                        </select>
+                </tr>
+                <tr>
+                    <span name="test" id="test"></span>
+                </tr>
+                <div id="compdiv" name="compdiv"></div>
+            </table>
+        </div>
+
+<script>
+
+
+    function tableCreate() {
+         document.getElementById("compdiv").innerHTML = "";
+
+         var json_ordercart = {{ jsonOrderCart|safe }};
+         var json_comparison = {{ jsonComparison|safe }};
+         var json_orderinfo = {{ jsonOrderInfo|safe }};
+         var json_user = {{ jsonUser|safe }};
+         var json_catalog = {{ jsonCatalog|safe }};
+
+         var body = document.getElementById("compdiv");
+         var oid = document.getElementById("compare_oid").value;
+         console.log(json_comparison[oid])
+
+         //for (let x in json_ordercart[oid]) {
+         //  console.log(json_ordercart[oid][x]['item_id'] + '->' +json_ordercart[oid][x]['quantity'])
+         //}
+
+        if (oid != 0){
+            var tbl = document.createElement('table');
+            tbl.style.width = '75%';
+            tbl.setAttribute('border', '1');
+            var tbdy = document.createElement('tbody');
+
+            confirmed_vid = json_orderinfo[oid]['vendor_id']
+
+            // ######################################################
+            // Header with Quantity
+            // ######################################################
+
+            var tr_header_item = document.createElement('tr');
+            var th = document.createElement('th');
+            th.appendChild(document.createTextNode('--'))
+            tr_header_item.appendChild(th)
+
+            var tr_quantity = document.createElement('tr');
+            var td = document.createElement('td');
+            td.appendChild(document.createTextNode('Quantity'))
+            tr_quantity.appendChild(td)
+
+            var tr_header_vendor = document.createElement('tr');
+            var th = document.createElement('th');
+            th.appendChild(document.createTextNode('Vendor ID'))
+            tr_header_vendor.appendChild(th)
+
+            for (let x in json_ordercart[oid]) {
+                var th = document.createElement('th');
+                var item_id = json_ordercart[oid][x]['item_id']
+                th.appendChild(document.createTextNode(json_catalog[item_id]))
+                tr_header_item.appendChild(th)
+
+                var td = document.createElement('td');
+                var qty = json_ordercart[oid][x]['quantity']
+                td.appendChild(document.createTextNode(qty))
+                tr_quantity.appendChild(td)
+
+                var th = document.createElement('th');
+                th.appendChild(document.createTextNode('Cost'))
+                tr_header_vendor.appendChild(th)
+            }
+            var th = document.createElement('th');
+            th.appendChild(document.createTextNode('Total Cost'))
+            tr_header_vendor.appendChild(th)
+
+            tbdy.appendChild(tr_header_item);
+            tbdy.appendChild(tr_quantity);
+            tbdy.appendChild(tr_header_vendor);
+
+            // ######################################################
+            // Vendor Comparison
+            // ######################################################
+
+            for (let vid in json_comparison[oid]) {
+                var vid_jsonobj = json_comparison[oid][vid]
+
+                var tr_vendor = document.createElement('tr');
+                var th = document.createElement('th');
+                th.appendChild(document.createTextNode(json_user[vid]));
+                tr_vendor.appendChild(th);
+
+                var total = 0;
+                for (let y in json_ordercart[oid]){
+                    var item_id = json_ordercart[oid][y]['item_id']
+                    var qty = json_ordercart[oid][y]['quantity']
+                    var costperunit = vid_jsonobj[item_id]['cost_per_unit']
+                    total += qty*costperunit
+
+                    var td = document.createElement('td');
+                    td.appendChild(document.createTextNode(costperunit));
+                    tr_vendor.appendChild(td);
+                }
+
+                var td = document.createElement('td');
+                td.appendChild(document.createTextNode(total));
+                tr_vendor.appendChild(td);
+
+                if (confirmed_vid != null) {
+                    var p = document.createElement('p');
+                    var node = document.createTextNode("-");
+                    if (confirmed_vid == vid){
+                        node = document.createTextNode("Confirmed");
+                    }
+                    p.appendChild(node);
+                    tr_vendor.appendChild(p);
+                } else {
+                    var a = document.createElement('a');
+                    var link = document.createTextNode("Select");
+                    a.appendChild(link);
+                    a.title = "Select";
+                    a.setAttribute("type", "button");
+                    a.setAttribute("class", "btn btn-outline-primary btn-sm");
+                    a.href = "/procurer/confirm-order-vendor/" + oid + "/" + vid;
+                    tr_vendor.appendChild(a);
+                }
+
+                tbdy.appendChild(tr_vendor);
+             }
+
+             tbl.appendChild(tbdy);
+             body.appendChild(tbl);
+        }
+     }
+</script>
+
+{% endblock %}

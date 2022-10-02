@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>List of Orders</h1>
+
+    <table style="width:50%" border="2" bordercolor="black">
+        <tr>
+			<th>Keyword</th>
+            <th>Created by</th>
+			<th>Created on</th>
+            <th>Required by</th>
+		</tr>
+		{% for order in allOrders %}
+		<tr>
+			<td>{{order.name}}</td>
+            <td>{{dictUser.get(order.procurer_id)}}</td>
+			<td>{{order.created_date}}</td>
+            <td>{{order.required_date}}</td>
+
+            <td><table border="2" bordercolor="blue">
+                <tr>
+                    <th>Item Info</th>
+                    <th>Quantity</th>
+                </tr>
+                {% for item in cartDict.get(order.id) %}
+                <tr>
+                    <td>{{dictCatalog.get(item.item_id)}}</td>
+                    <td>{{item.quantity}}</td>
+                </tr>
+                {% endfor %}
+                </table></td>
+
+            <td><form method="POST" action="/vendor/order/{{order.id}}">
+                <input type="hidden" value="{{order.id}}" name="oid">
+				<input type="submit" value="Show"></form></td>
+		</tr>
+		{% endfor %}
+    </table>
+
+{% endblock %}

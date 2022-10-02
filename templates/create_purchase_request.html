@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <title>Create Purchase Request</title>
+
+    <form method="POST" action="/create-purchase-request">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.contact.label }}
+        {% if form.contact.errors %}
+            {% for error in form.contact.errors %}
+                <p class="error-message">{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        {{ form.contact }}
+    </div>
+    <div class="form-group">
+        {{ form.required_date.label }}
+        {% if form.required_date.errors %}
+            {% for error in form.required_date.errors %}
+                <p class="error-message">{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        {{ form.required_date }}
+    </div>
+    <div class="form-group">
+        <select id="dropbtn" name="itemList">
+            {% for item in allItems %}
+            <option value="{{item.id}}" >{{item.name}} | {{item.maker}} | {{item.model}}</option>
+            {% endfor %}
+        </select>
+        {{ form.quantity.label }}
+        {% if form.quantity.errors %}
+            {% for error in form.quantity.errors %}
+                <p class="error-message">{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        {{ form.quantity }}
+        <input type="submit" name="submit" value="Add">
+    </div>
+        {% if cart  %}
+        <table style="width:30%" class="center">
+			<tr>
+				<th>Item Info</th>
+				<th>Quantity</th>
+			</tr>
+
+			{% for cartItem in cart %}
+			<tr>
+                <input type="hidden" value="{{cartItem.item_id}}_{{cartItem.quantity}}" name="cart">
+				<td style="text-align:center">{{dictCatalog.get(cartItem.item_id)}}</td>
+				<td style="text-align:center">{{cartItem.quantity}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% else %}
+        <p>Cart is empty</p>
+        {% endif %}
+
+        <input type="hidden" value={{prid}} name="prid">
+        {{ form.submit }}
+    </form>
+{% endblock %}

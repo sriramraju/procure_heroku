@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <h1>List of PRs</h1>
+    <form method="POST" action="/procurer/create-rfq">
+        <div>
+
+            <table style="width=75%" border="2" bordercolor="black">
+            <tr>
+                <th></th>
+                <th>Keyword</th>
+                <th>Created by</th>
+                <th>Created on</th>
+                <th>Required by</th>
+                <th>Order Id</th>
+            </tr>
+
+            {% for pr in allPrs %}
+            <tr>
+                {% if not pr.order_id %}
+                    <td><input type="checkbox" value="{{pr.id}}" name="prs"></td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                <td>{{pr.name}}</td>
+                <td>{{dictUser.get(pr.poc_id)}}</td>
+                <td>{{pr.created_date}}</td>
+                <td>{{pr.required_date}}</td>
+                <td>{{pr.order_id}}</td>
+                <td><table border="2" bordercolor="blue">
+                <tr>
+                    <th>Item Info</th>
+                    <th>Quantity</th>
+                </tr>
+                {% for item in cartDict.get(pr.id) %}
+                <tr>
+                    <td>{{dictCatalog.get(item.item_id)}}</td>
+                    <td>{{item.quantity}}</td>
+                </tr>
+                {% endfor %}
+                </table></td>
+            </tr>
+            {% endfor %}
+            </table>
+        </div>
+
+        <table>
+            <tr>
+                <input name="form" type="submit" value="Create RFQ">
+            </tr>
+        </table>
+
+    </form>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>List of PRs</h1>
+
+    <table style="width:75%" border="2" bordercolor="black">
+        <tr>
+			<th>Keyword</th>
+            <th>Created by</th>
+			<th>Created on</th>
+            <th>Required by</th>
+		</tr>
+
+		{% for pr in allPrs %}
+		<tr>
+			<td>{{pr.name}}</td>
+            <td>{{dictUser.get(pr.poc_id)}}</td>
+			<td>{{pr.created_date}}</td>
+            <td>{{pr.required_date}}</td>
+            <td><table border="2" bordercolor="blue">
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                </tr>
+                {% for item in cartDict.get(pr.id) %}
+                <tr>
+                    <td>{{dictCatalog.get(item.item_id)}}</td>
+                    <td>{{item.quantity}}</td>
+                </tr>
+                {% endfor %}
+                </table></td>
+            {% if pr.status == 2 %}
+            <td>
+                <form method="POST" action="/approve-purchase-request">
+                    <input type="hidden" value="{{pr.id}}" name="prid">
+                    <input type="submit" value="Approve"></form>
+                <form method="POST" action="/reject-purchase-request">
+                    <input type="hidden" value="{{pr.id}}" name="prid">
+                    <input type="submit" value="Reject"></form>
+             </td>
+            {% elif pr.status == 3 %}
+                <td>Approved. Waiting for procurer.</td>
+            {% elif pr.status == 4 %}
+                <td>RFQ</td>
+            {% elif pr.status == 5 %}
+                <td>Order Generated</td>
+            {% endif %}
+		</tr>
+		{% endfor %}
+    </table>
+
+{% endblock %}

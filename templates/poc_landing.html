@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>List of PRs</h1>
+
+    <table style="width:50%" border="2" bordercolor="black">
+        <tr>
+			<th>Keyword</th>
+            <th>Created by</th>
+			<th>Created on</th>
+            <th>Required by</th>
+		</tr>
+
+		{% for pr in allPrs %}
+		<tr>
+			<td>{{pr.name}}</td>
+            <td>{{dictUser.get(pr.poc_id)}}</td>
+			<td>{{pr.created_date}}</td>
+            <td>{{pr.required_date}}</td>
+            <td><form method="POST" action="/show-purchase-request">
+                <input type="hidden" value="{{pr.id}}" name="prid">
+				<input type="submit" value="Show"></form></td>
+            {% if pr.status == 1 %}
+            <td><form method="POST" action="/edit-purchase-request">
+                <input type="hidden" value="{{pr.id}}" name="prid">
+				<input type="submit" value="Edit"></form></td>
+            <td><form method="POST" action="/submit-purchase-request">
+                <input type="hidden" value="{{pr.id}}" name="prid">
+				<input type="submit" value="Submit for Approval"></form></td>
+            {% elif pr.status == 2 %}
+                <td>Approval Requested</td>
+            {% elif pr.status == 3 %}
+                <td>Approved by {{pr.approver_id}}</td>
+            {% elif pr.status == 4 %}
+                <td>RFQ</td>
+            {% elif pr.status == 5 %}
+                <td>Order Generated</td>
+            {% else %}
+                <td>NA status</td>
+            {% endif %}
+		</tr>
+		{% endfor %}
+    </table>
+
+    <a type="button" class="btn btn-primary" href="/create-purchase-request">Create Purchase Request</a>
+
+{% endblock %}
