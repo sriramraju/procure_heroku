@@ -1,0 +1,506 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.2
+-- Dumped by pg_dump version 14.2
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: catalog; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.catalog (
+    id bigint NOT NULL,
+    name character varying(50) NOT NULL,
+    maker character varying(50) NOT NULL,
+    model character varying(50) NOT NULL
+);
+
+
+--
+-- Name: catalog_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.catalog_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: catalog_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.catalog_id_seq OWNED BY public.catalog.id;
+
+
+--
+-- Name: catalog_order_vendor; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.catalog_order_vendor (
+    catalog_id integer NOT NULL,
+    order_id integer NOT NULL,
+    vendor_id integer NOT NULL,
+    quantity integer NOT NULL,
+    cost integer NOT NULL,
+    available_date date NOT NULL
+);
+
+
+--
+-- Name: catalog_pr; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.catalog_pr (
+    catalog_id integer NOT NULL,
+    pr_id integer NOT NULL,
+    quantity integer NOT NULL
+);
+
+
+--
+-- Name: orders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.orders (
+    id bigint NOT NULL,
+    procurer_id integer NOT NULL,
+    vendor_id integer,
+    name character varying(10) NOT NULL,
+    created_date timestamp without time zone NOT NULL,
+    required_date date NOT NULL,
+    status integer NOT NULL
+);
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.orders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
+
+
+--
+-- Name: purchaserequests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.purchaserequests (
+    id bigint NOT NULL,
+    poc_id integer NOT NULL,
+    approver_id integer,
+    procurer_id integer,
+    name character varying(10) NOT NULL,
+    created_date timestamp without time zone NOT NULL,
+    required_date date NOT NULL,
+    status integer NOT NULL,
+    order_id integer
+);
+
+
+--
+-- Name: purchaserequests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.purchaserequests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: purchaserequests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.purchaserequests_id_seq OWNED BY public.purchaserequests.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id bigint NOT NULL,
+    name character varying(50) NOT NULL,
+    email character varying(50) NOT NULL,
+    password character varying(50) NOT NULL,
+    phone integer NOT NULL,
+    role character varying(10) NOT NULL
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: catalog id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.catalog ALTER COLUMN id SET DEFAULT nextval('public.catalog_id_seq'::regclass);
+
+
+--
+-- Name: orders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders ALTER COLUMN id SET DEFAULT nextval('public.orders_id_seq'::regclass);
+
+
+--
+-- Name: purchaserequests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.purchaserequests ALTER COLUMN id SET DEFAULT nextval('public.purchaserequests_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: catalog; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.catalog (id, name, maker, model) FROM stdin;
+1	Laptop	Lenovo	Yoga
+2	Laptop	Dell	XPZ
+3	Printer	Brother	PX100
+4	Keyboard	Anker	QZ12
+5	Paper	Forest	A4
+6	Test	Test	Test
+\.
+
+
+--
+-- Data for Name: catalog_order_vendor; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.catalog_order_vendor (catalog_id, order_id, vendor_id, quantity, cost, available_date) FROM stdin;
+1	1	10	15	100	2022-06-22
+2	1	10	7	2500	2022-06-22
+3	1	10	10	50	2022-06-22
+4	1	10	17	10	2022-06-22
+1	1	9	15	50	2022-06-29
+2	1	9	7	2000	2022-06-29
+3	1	9	10	500	2022-06-29
+4	1	9	17	20	2022-06-29
+1	2	10	10	2000	2022-07-06
+3	2	10	8	400	2022-07-06
+5	2	10	100	70	2022-07-06
+1	2	9	10	700	2022-06-21
+3	2	9	8	70	2022-06-21
+5	2	9	100	50	2022-06-21
+1	2	8	10	800	2022-06-23
+3	2	8	8	200	2022-06-23
+5	2	8	100	100	2022-06-23
+1	4	10	25	100	2022-08-31
+4	4	10	120	100	2022-08-31
+5	4	10	400	100	2022-08-31
+1	4	9	25	200	2022-07-20
+4	4	9	120	200	2022-07-20
+5	4	9	400	200	2022-07-20
+\.
+
+
+--
+-- Data for Name: catalog_pr; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.catalog_pr (catalog_id, pr_id, quantity) FROM stdin;
+1	1	5
+2	1	7
+3	2	10
+4	2	3
+1	3	10
+3	3	10
+4	3	17
+1	5	4
+2	5	7
+3	5	10
+4	5	12
+5	5	15
+2	4	12
+5	7	100
+1	8	10
+3	8	8
+5	8	100
+4	10	100
+5	11	200
+1	11	25
+4	12	20
+5	12	200
+5	13	100
+2	13	5
+3	14	17
+\.
+
+
+--
+-- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.orders (id, procurer_id, vendor_id, name, created_date, required_date, status) FROM stdin;
+1	10	10	RFQ1	2022-05-20 00:46:17.530603	2022-06-01	1
+2	10	\N	rfq4	2022-05-24 23:34:45.185418	2022-06-17	1
+3	10	\N	rfq3	2022-05-25 00:31:24.443894	2022-05-31	1
+4	10	10	rfq10	2022-06-04 22:33:43.32738	2022-07-27	2
+\.
+
+
+--
+-- Data for Name: purchaserequests; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.purchaserequests (id, poc_id, approver_id, procurer_id, name, created_date, required_date, status, order_id) FROM stdin;
+2	2	\N	\N	test2	2022-05-19 23:57:22.817026	2022-05-19	1	\N
+5	3	\N	\N	test5	2022-05-19 23:57:22.817026	2022-05-19	1	\N
+4	3	\N	\N	test4	2022-05-19 23:57:22.817026	2022-05-19	1	\N
+1	1	10	\N	test1	2022-05-19 23:57:22.817026	2022-05-19	4	1
+3	2	10	\N	test3	2022-05-19 23:57:22.817026	2022-05-19	4	1
+8	10	10	\N	Test7	2022-05-24 23:33:25.558793	2022-06-03	4	2
+7	10	10	\N	test6	2022-05-20 00:12:27.691087	2022-05-24	4	3
+9	10	\N	\N	test11	2022-06-04 22:21:05.936737	2022-06-28	1	\N
+10	10	10	\N	test10	2022-06-04 22:23:26.302046	2022-06-28	6	4
+11	10	10	\N	test12	2022-06-04 22:26:24.675291	2022-07-07	6	4
+12	10	10	\N	test13	2022-06-04 22:27:13.628583	2022-08-17	6	4
+13	10	10	\N	pr_0110_1	2022-10-01 20:48:19.839973	2022-11-16	4	\N
+14	10	\N	\N	pr_0110_2	2022-10-01 21:00:24.737306	2022-10-27	1	\N
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.users (id, name, email, password, phone, role) FROM stdin;
+1	Rap	rap@xyz.com	qwerty	1111	poc
+2	Rahul	rahul@xyz.com	qwerty	1112	poc
+3	Ramji	ramji@xyz.com	qwerty	1113	poc
+4	Chetan	chetan@xyz.com	qwerty	2222	approver
+5	Arun	arun@xyz.com	qwerty	3333	procurer
+6	Prabhu	prabhu@xyz.com	qwerty	4444	vendor
+7	Alex	prabhu@xyz.com	qwerty	5555	vendor
+8	Raj	raj@xyz.com	qwerty	6666	vendor
+9	Ali	ali@xyz.com	qwerty	7777	vendor
+10	Admin	admin@xyz.com	qwerty	8888	admin
+\.
+
+
+--
+-- Name: catalog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.catalog_id_seq', 6, true);
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.orders_id_seq', 4, true);
+
+
+--
+-- Name: purchaserequests_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.purchaserequests_id_seq', 14, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 10, true);
+
+
+--
+-- Name: catalog_order_vendor catalog_order_vendor_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.catalog_order_vendor
+    ADD CONSTRAINT catalog_order_vendor_pkey PRIMARY KEY (catalog_id, order_id, vendor_id);
+
+
+--
+-- Name: catalog catalog_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.catalog
+    ADD CONSTRAINT catalog_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: catalog_pr catalog_pr_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.catalog_pr
+    ADD CONSTRAINT catalog_pr_pkey PRIMARY KEY (catalog_id, pr_id);
+
+
+--
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: purchaserequests purchaserequests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.purchaserequests
+    ADD CONSTRAINT purchaserequests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: catalog_order_vendor catalog_order_vendor_catalog_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.catalog_order_vendor
+    ADD CONSTRAINT catalog_order_vendor_catalog_id_fkey FOREIGN KEY (catalog_id) REFERENCES public.catalog(id) ON DELETE CASCADE;
+
+
+--
+-- Name: catalog_order_vendor catalog_order_vendor_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.catalog_order_vendor
+    ADD CONSTRAINT catalog_order_vendor_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(id) ON DELETE CASCADE;
+
+
+--
+-- Name: catalog_order_vendor catalog_order_vendor_vendor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.catalog_order_vendor
+    ADD CONSTRAINT catalog_order_vendor_vendor_id_fkey FOREIGN KEY (vendor_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: catalog_pr catalog_pr_catalog_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.catalog_pr
+    ADD CONSTRAINT catalog_pr_catalog_id_fkey FOREIGN KEY (catalog_id) REFERENCES public.catalog(id) ON DELETE CASCADE;
+
+
+--
+-- Name: catalog_pr catalog_pr_pr_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.catalog_pr
+    ADD CONSTRAINT catalog_pr_pr_id_fkey FOREIGN KEY (pr_id) REFERENCES public.purchaserequests(id) ON DELETE CASCADE;
+
+
+--
+-- Name: orders orders_procurer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_procurer_id_fkey FOREIGN KEY (procurer_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: orders orders_vendor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_vendor_id_fkey FOREIGN KEY (vendor_id) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: purchaserequests purchaserequests_approver_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.purchaserequests
+    ADD CONSTRAINT purchaserequests_approver_id_fkey FOREIGN KEY (approver_id) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: purchaserequests purchaserequests_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.purchaserequests
+    ADD CONSTRAINT purchaserequests_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(id) ON DELETE SET NULL;
+
+
+--
+-- Name: purchaserequests purchaserequests_poc_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.purchaserequests
+    ADD CONSTRAINT purchaserequests_poc_id_fkey FOREIGN KEY (poc_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: purchaserequests purchaserequests_procurer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.purchaserequests
+    ADD CONSTRAINT purchaserequests_procurer_id_fkey FOREIGN KEY (procurer_id) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
